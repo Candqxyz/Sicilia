@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sicilia - Itinerario 5 Giorni</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .timeline {
+            position: relative;
+            margin: 40px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(180deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
+            border-radius: 2px;
+        }
+
+        .day-card {
+            background: rgba(255, 255, 255, 0.95);
+            margin: 30px 0 30px 70px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.6s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .day-card.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .day-card::before {
+            content: '';
+            position: absolute;
+            left: -55px;
+            top: 30px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 4px solid;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .day-card:nth-child(1)::before { border-color: #ff6b6b; }
+        .day-card:nth-child(2)::before { border-color: #4ecdc4; }
+        .day-card:nth-child(3)::before { border-color: #45b7d1; }
+        .day-card:nth-child(4)::before { border-color: #96ceb4; }
+        .day-card:nth-child(5)::before { border-color: #ffeaa7; }
+
+        .day-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .day-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .day-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .activity {
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s ease;
+        }
+
+        .activity:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .time {
+            font-weight: bold;
+            color: #e74c3c;
+            font-size: 1rem;
+        }
+
+        .location {
+            font-weight: 600;
+            color: #2980b9;
+            margin: 5px 0;
+        }
+
+        .description {
+            color: #555;
+            margin-left: 10px;
+        }
+
+        .info-section {
+            background: rgba(255, 255, 255, 0.95);
+            margin: 40px 0;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .info-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-title::before {
+            content: '';
+            width: 30px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            margin-right: 15px;
+            border-radius: 2px;
+        }
+
+        .distances-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .distances-table th,
+        .distances-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .distances-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+        }
+
+        .distances-table tr:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .accommodations {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .accommodation-card {
+            background: rgba(255,255,255,0.8);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s ease;
+        }
+
+        .accommodation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .city-name {
+            font-weight: 600;
+            color: #2980b9;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .hotel-list {
+            color: #555;
+        }
+
+        .city-section {
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .city-section-title {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .hotel-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .hotel-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .hotel-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .hotel-btn.active {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
+        }
+
+        .hotel-details {
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .hotel-details.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hotel-name {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .hotel-price {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-left: 15px;
+            font-size: 1rem;
+        }
+
+        .hotel-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid #3498db;
+        }
+
+        .info-icon {
+            font-size: 1.2rem;
+            margin-right: 10px;
+        }
+
+        .features-list {
+            background: rgba(46, 204, 113, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 3px solid #2ecc71;
+        }
+
+        .features-title {
+            font-weight: 600;
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+
+        .feature-item {
+            margin: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .feature-item::before {
+            content: '✅';
+            position: absolute;
+            left: 0;
+        }
+
+        .cancellation-info {
+            background: rgba(230, 126, 34, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 3px solid #e67e22;
+        }
+
+        .cancellation-title {
+            font-weight: 600;
+            color: #d68910;
+            margin-bottom: 10px;
+        }
+
+        .car-selection {
+            background: rgba(255,255,255,0.8);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+
+        .car-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .car-btn {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+        }
+
+        .car-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(243, 156, 18, 0.4);
+        }
+
+        .car-btn.active {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
+        }
+
+        .car-details {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            display: none;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        .car-details.show {
+            display: block;
+        }
+
+        .car-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .car-image {
+            width: 280px;
+            height: 180px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .car-image:hover {
+            transform: scale(1.05);
+        }
+
+        .car-info-main {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .car-name {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .car-category {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .car-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .spec-item {
+            background: rgba(52, 152, 219, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+            display: flex;
+            align-items: center;
+        }
+
+        .spec-icon {
+            font-size: 1.5rem;
+            margin-right: 12px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .spec-text {
+            flex: 1;
+        }
+
+        .spec-label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.9rem;
+        }
+
+        .spec-value {
+            color: #555;
+            font-size: 1rem;
+        }
+
+        .car-features {
+            background: rgba(46, 204, 113, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border-left: 4px solid #2ecc71;
+        }
+
+        .car-features-title {
+            font-weight: 700;
+            color: #27ae60;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .car-features-title::before {
+            content: '✨';
+            margin-right: 8px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+        }
+
+        .feature-badge {
+            background: rgba(255,255,255,0.8);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .feature-badge::before {
+            content: '✓';
+            color: #27ae60;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .ideal-for {
+            background: rgba(155, 89, 182, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border-left: 4px solid #9b59b6;
+        }
+
+        .ideal-title {
+            font-weight: 700;
+            color: #8e44ad;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .ideal-title::before {
+            content: '🎯';
+            margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .car-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .car-image {
+                width: 100%;
+                max-width: 300px;
+                height: 200px;
+            }
+            
+            .car-specs {
+                grid-template-columns: 1fr;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-element {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-element:nth-child(2) { top: 20%; right: 10%; animation-delay: 1s; }
+        .floating-element:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 2s; }
+        .floating-element:nth-child(4) { bottom: 10%; right: 20%; animation-delay: 3s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .day-card {
+                margin-left: 50px;
+                padding: 20px;
+            }
+            
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .day-card::before {
+                left: -35px;
+            }
+            
+            .accommodations {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-element">🌋</div>
+        <div class="floating-element">🏛️</div>
+        <div class="floating-element">🌅</div>
+        <div class="floating-element">✈️</div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>🇮🇹 Sicilia</h1>
+            <div class="subtitle">Itinerario di 5 giorni - 25-29 Agosto</div>
+        </header>
+
+        <div class="timeline">
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-icon">✈️</div>
+                    <div class="day-title">Giorno 1 – Lunedì 25 agosto – Arrivo a Catania e Etna</div>
+                </div>
+                <div class="activity">
+                    <div class="time">07:50</div>
+                    <div class="location">Aeroporto di Catania</div>
+                    <div class="description">Arrivo</div>
+                </div>
+                <div class="activity">
+                    <div class="time">08:30</div>
+                    <div class="location">Ritiro auto a noleggio</div>
+                </div>
+                <div class="activity">
+                    <div class="time">09:30 – 14:00</div>
+                    <div class="location">Etna Sud – Rifugio Sapienza</div>
+                    <div class="description">
+                        • Facoltativa: salita in funivia + jeep ai crateri<br>
+                        • Breve escursione e visita dei crateri Silvestri<br>
+                        • Pranzo al rifugio o in cantina (Cantine Murgo o Gambino Winery)
+                    </div>
+                </div>
+                <div class="activity">
+                    <div class="time">14:30 – 18:30</div>
+                    <div class="location">Partenza per Palermo (~3h30)</div>
+                    <div class="description">Possibile sosta relax o caffè a Cefalù se arrivate in orario</div>
+                </div>
+                <div class="activity">
+                    <div class="time">20:00</div>
+                    <div class="location">Palermo</div>
+                    <div class="description">Arrivo, check-in in hotel e cena leggera<br><strong>Pernottamento:</strong> Palermo centro</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-icon">🏛️</div>
+                    <div class="day-title">Giorno 2 – Martedì 26 agosto – Palermo</div>
+                </div>
+                <div class="activity">
+                    <div class="time">Mattina</div>
+                    <div class="location">Centro storico di Palermo</div>
+                    <div class="description">
+                        • Cattedrale<br>
+                        • Quattro Canti<br>
+                        • Cappella Palatina<br>
+                        • Mercato di Ballarò o Vucciria
+                    </div>
+                </div>
+                <div class="activity">
+                    <div class="time">13:00</div>
+                    <div class="location">Pranzo tipico</div>
+                    <div class="description">Es. Antica Focacceria San Francesco</div>
+                </div>
+                <div class="activity">
+                    <div class="time">Pomeriggio</div>
+                    <div class="location">Teatro Massimo & Mondello</div>
+                    <div class="description">
+                        • Teatro Massimo<br>
+                        • Passeggiata a Mondello (mare, relax o gelato)
+                    </div>
+                </div>
+                <div class="activity">
+                    <div class="location">Cena tipica</div>
+                    <div class="description">Es. Osteria Ballarò o Il Mirto e la Rosa<br><strong>Pernottamento:</strong> Palermo</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-icon">🌅</div>
+                    <div class="day-title">Giorno 3 – Mercoledì 27 agosto – Trapani e Erice</div>
+                </div>
+                <div class="activity">
+                    <div class="time">08:30</div>
+                    <div class="location">Partenza per Erice (~1h30)</div>
+                </div>
+                <div class="activity">
+                    <div class="time">10:00 – 12:30</div>
+                    <div class="location">Borgo medievale di Erice</div>
+                    <div class="description">
+                        • Castello di Venere<br>
+                        • Centro storico e vista sul mare
+                    </div>
+                </div>
+                <div class="activity">
+                    <div class="time">13:00</div>
+                    <div class="location">Pranzo a Erice o Trapani</div>
+                    <div class="description">Es. Cantina Siciliana</div>
+                </div>
+                <div class="activity">
+                    <div class="time">Pomeriggio</div>
+                    <div class="location">Relax e visite</div>
+                    <div class="description">
+                        • Relax o visita delle Saline di Trapani e Paceco<br>
+                        • Facoltativo: Passeggiata a Trapani centro (corso Vittorio Emanuele)
+                    </div>
+                </div>
+                <div class="activity">
+                    <div class="location">Cena con vista mare a Trapani</div>
+                    <div class="description"><strong>Pernottamento:</strong> Trapani o Erice</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-icon">🚗</div>
+                    <div class="day-title">Giorno 4 – Giovedì 28 agosto – Ritorno verso Catania + sosta a Cefalù</div>
+                </div>
+                <div class="activity">
+                    <div class="time">08:30</div>
+                    <div class="location">Partenza da Trapani verso est</div>
+                </div>
+                <div class="activity">
+                    <div class="time">11:00 – 14:00</div>
+                    <div class="location">Sosta e pranzo a Cefalù</div>
+                    <div class="description">
+                        • Spiaggia<br>
+                        • Duomo Normanno<br>
+                        • Centro storico
+                    </div>
+                </div>
+                <div class="activity">
+                    <div class="time">14:30 – 17:30</div>
+                    <div class="location">Proseguimento per Catania (~2h)</div>
+                </div>
+                <div class="activity">
+                    <div class="time">18:00</div>
+                    <div class="location">Catania</div>
+                    <div class="description">Arrivo, check-in e cena in centro<br><strong>Pernottamento:</strong> Catania</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-icon">🛫</div>
+                    <div class="day-title">Giorno 5 – Venerdì 29 agosto – Relax a Catania & partenza</div>
+                </div>
+                <div class="activity">
+                    <div class="time">Mattina</div>
+                    <div class="location">Relax a Catania</div>
+                    <div class="description">
+                        • Colazione con granita e brioche (es. Savia o Spinella)<br>
+                        • Passeggiata in centro (Piazza Duomo, Via Etnea)
+                    </div>
+                </div>
+                <div class="activity">
+                    <div class="time">13:00</div>
+                    <div class="location">Pranzo leggero</div>
+                </div>
+                <div class="activity">
+                    <div class="time">15:00 – 17:00</div>
+                    <div class="location">Attività finale</div>
+                    <div class="description">Eventuale visita al Monastero dei Benedettini o shopping</div>
+                </div>
+                <div class="activity">
+                    <div class="time">17:30</div>
+                    <div class="location">Riconsegna auto e trasferimento in aeroporto</div>
+                </div>
+                <div class="activity">
+                    <div class="time">20:50</div>
+                    <div class="location">Partenza volo per Firenze</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-title">🚘 Distanze e tempi indicativi</div>
+            <table class="distances-table">
+                <thead>
+                    <tr>
+                        <th>Tratta</th>
+                        <th>Tempo di percorrenza</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Etna → Palermo</td>
+                        <td>~3h30</td>
+                    </tr>
+                    <tr>
+                        <td>Palermo → Erice</td>
+                        <td>~1h30</td>
+                    </tr>
+                    <tr>
+                        <td>Trapani → Cefalù</td>
+                        <td>~2h30</td>
+                    </tr>
+                    <tr>
+                        <td>Cefalù → Catania</td>
+                        <td>~2h</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="info-section">
+            <div class="info-title">🚗 Scegli la tua auto a noleggio</div>
+            
+            <div class="car-selection">
+                <div class="car-buttons">
+                    <button class="car-btn" onclick="showCarDetails('seat')">
+                        🚗 Seat Leon
+                    </button>
+                    <button class="car-btn" onclick="showCarDetails('jeep')">
+                        🚙 Jeep Renegade
+                    </button>
+                    <button class="car-btn" onclick="showCarDetails('fiat')">
+                        🚘 Fiat Tipo
+                    </button>
+                </div>
+                <div id="car-details" class="car-details"></div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-title">🛏️ Scegli le tue sistemazioni</div>
+            
+            <!-- Palermo Hotels -->
+            <div class="city-section">
+                <h3 class="city-section-title">📍 Pernottamento a Palermo (2 notti)</h3>
+                <div class="hotel-buttons">
+                    <button class="hotel-btn" onclick="showHotelDetails('palermo1')">
+                        🥇 L'Arco Antico - €176
+                    </button>
+                    <button class="hotel-btn" onclick="showHotelDetails('palermo2')">
+                        🥈 Palermo Central Apartments - €190
+                    </button>
+                    <button class="hotel-btn" onclick="showHotelDetails('palermo3')">
+                        🥉 NR Apartment - €176
+                    </button>
+                    <button class="hotel-btn" onclick="showHotelDetails('palermo4')">
+                        🏨 Hotel Mediterraneo - €139
+                    </button>
+                </div>
+                <div id="palermo-details" class="hotel-details"></div>
+            </div>
+
+            <!-- Trapani Hotels -->
+            <div class="city-section">
+                <h3 class="city-section-title">📍 Pernottamento a Trapani (1 notte)</h3>
+                <div class="hotel-buttons">
+                    <button class="hotel-btn" onclick="showHotelDetails('trapani1')">
+                        🥇 Gli Agrumi Rooms - €103
+                    </button>
+                    <button class="hotel-btn" onclick="showHotelDetails('trapani2')">
+                        🥈 Casa Salinella - €97
+                    </button>
+                    <button class="hotel-btn" onclick="showHotelDetails('trapani3')">
+                        🥉 Acqua di Mare - €115
+                    </button>
+                </div>
+                <div id="trapani-details" class="hotel-details"></div>
+            </div>
+
+            <!-- Catania Hotels -->
+            <div class="city-section">
+                <h3 class="city-section-title">📍 Pernottamento a Catania (1notte)</h3>
+                <div class="hotel-buttons">
+                    <button class="hotel-btn" onclick="showHotelDetails('catania1')">
+                        🥇 Al Chiaro di Luna - €112
+                    </button>
+                    <button class="hotel-btn" onclick="showHotelDetails('catania2')">
+                        🥈 Casa indipendente - €107
+                    </button>
+                </div>
+                <div id="catania-details" class="hotel-details"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scrolling animation for cards
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all day cards
+        document.querySelectorAll('.day-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Add smooth scroll behavior
+        document.documentElement.style.scrollBehavior = 'smooth';
+
+        // Add click interaction to activities
+        document.querySelectorAll('.activity').forEach(activity => {
+            activity.addEventListener('click', () => {
+                activity.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    activity.style.transform = '';
+                }, 200);
+            });
+        });
+
+        // Hotel data
+        const hotelData = {
+            palermo1: {
+                name: "🥇 L'Arco Antico",
+                price: "€176",
+                rating: "⭐ Eccellente – 9.0",
+                distance: "📍 1,7 km dal centro",
+                type: "🏠 Intero appartamento",
+                guests: "🛏️ Ideale per 4 adulti",
+                rooms: "Camera 1: 1 letto matrimoniale alla francese<br>Camera 2: 2 letti singoli",
+                cancellation: "✅ Cancellazione gratuita prima dell'11 agosto 2025",
+                payment: "💳 Non paghi niente prima del 9 agosto 2025",
+                features: ["Parcheggio privato", "Connessione WiFi gratuita", "Aria condizionata"]
+            },
+            palermo2: {
+                name: "🥈 Palermo Central Apartments",
+                price: "€190",
+                rating: "⭐ Ottimo – 8.4",
+                distance: "📍 1,7 km dal centro",
+                type: "🏠 Intero appartamento",
+                guests: "🛏️ Ideale per 4 adulti",
+                rooms: "Camera 1: 1 letto matrimoniale alla francese<br>Camera 2: 2 letti singoli",
+                cancellation: "✅ Cancellazione gratuita prima dell'11 agosto 2025",
+                payment: "💳 Paga la struttura prima dell'arrivo",
+                features: ["Connessione WiFi gratuita", "Aria condizionata"]
+            },
+            palermo3: {
+                name: "🥉 NR Apartment",
+                price: "€176",
+                rating: "🆕 Novità di Booking (nessun voto disponibile)",
+                distance: "📍 1 km dal centro",
+                type: "🏠 Intero appartamento",
+                guests: "🛏️ Ideale per 4 adulti",
+                rooms: "2 letti matrimoniali alla francese",
+                cancellation: "❌ Non rimborsabile",
+                payment: "💳 Paga online",
+                features: ["Parcheggio gratuito", "Connessione WiFi gratuita", "Aria condizionata"]
+            },
+            palermo4: {
+                name: "🏨 Hotel Mediterraneo",
+                price: "€139",
+                rating: "📊 85% di giudizi positivi",
+                distance: "🍽️ Colazione eccellente inclusa",
+                type: "🏨 Hotel",
+                guests: "👨‍👩‍👧 Camere familiari",
+                rooms: "Camere standard dell'hotel",
+                cancellation: "✅ Cancellazione gratuita fino al 21 agosto 2025",
+                payment: "💳 Non paghi nulla fino al 19 agosto 2025",
+                features: ["Wi-Fi gratuito", "Parcheggio", "Reception 24h", "Bar", "Deposito bagagli", "Animali ammessi", "Autonoleggio", "Check-in rapido"]
+            },
+            trapani1: {
+                name: "🥇 Gli Agrumi Rooms",
+                price: "€103",
+                rating: "⭐ Buono – 7.6",
+                distance: "📍 450 m dal centro • 🌊 1,4 km dalla spiaggia",
+                type: "🏨 Camera doppia",
+                guests: "🛏️ 2 letti matrimoniali (per 4 adulti)",
+                rooms: "🍽️ No colazione",
+                cancellation: "✅ Cancellazione gratuita fino al 26 agosto 2025",
+                payment: "💳 Paga in struttura, senza anticipo",
+                features: ["Navetta aeroportuale", "WiFi veloce (71 Mbps)", "Camere non fumatori", "Servizio in camera", "Bollitore/macchina caffè", "Reception h24"]
+            },
+            trapani2: {
+                name: "🥈 Casa Salinella",
+                price: "€97",
+                rating: "🏠 Casa vacanze",
+                distance: "📍 5,2 km da Trapani (🚗 12 min in auto)",
+                type: "🏠 Intera casa vacanze",
+                guests: "🛏️ Fino a 4 persone",
+                rooms: "Camera 1: 1 letto matrimoniale<br>Camera 2: 1 letto singolo<br>Soggiorno: 1 divano letto",
+                cancellation: "❌ Non rimborsabile",
+                payment: "💳 Paga online",
+                features: ["Parcheggio gratuito", "Camere non fumatori", "WiFi gratuito", "Camere familiari"]
+            },
+            trapani3: {
+                name: "🥉 Acqua di Mare",
+                price: "€115",
+                rating: "🍽️ Colazione inclusa",
+                distance: "📍 10,5 km da Trapani (🚗 18 min in auto)",
+                type: "🏨 Camera tripla",
+                guests: "🛏️ 2 letti singoli + 1 letto matrimoniale large",
+                rooms: "🍽️ Colazione inclusa nel prezzo",
+                cancellation: "✅ Cancellazione gratuita fino al 20 agosto 2025",
+                payment: "💳 Non paghi niente prima del 18 agosto 2025",
+                features: ["Navetta aeroportuale", "Parcheggio gratuito", "Camere non fumatori", "WiFi gratuito", "Colazione inclusa", "Camere familiari"]
+            },
+            catania1: {
+                name: "🥇 Al Chiaro di Luna",
+                price: "€112",
+                rating: "⭐ Ottimo",
+                distance: "📍 0,6 km dal centro • ✈️ 7 min dall'aeroporto",
+                type: "🏨 Camera multipla",
+                guests: "🛏️ 6 letti singoli per 6 persone",
+                rooms: "🍽️ Colazione inclusa",
+                cancellation: "✅ Cancellazione gratuita fino al 23 agosto 2025",
+                payment: "💳 Non paghi niente prima del 21 agosto 2025",
+                features: ["Camere non fumatori", "Parcheggio privato", "WiFi gratuito", "Camere familiari", "Terrazza", "Riscaldamento", "Colazione"]
+            },
+            catania2: {
+                name: "🥈 Casa indipendente vicino al centro",
+                price: "€107",
+                rating: "⭐ Ottimo",
+                distance: "📍 1,6 km dal centro • ✈️ 8 min dall'aeroporto",
+                type: "🏠 Intero appartamento",
+                guests: "🛏️ Fino a 4 persone",
+                rooms: "Camera 1: 1 letto singolo + 1 matrimoniale alla francese<br>Camera 2: 1 letto a castello",
+                cancellation: "✅ Cancellazione gratuita fino al 29 luglio 2025",
+                payment: "💳 Paga online",
+                features: ["Navetta aeroportuale", "Camere non fumatori", "Parcheggio", "WiFi gratuito", "Camere familiari", "Riscaldamento", "Lavanderia", "Colazione"]
+            }
+        };
+
+        function showHotelDetails(hotelId) {
+            const hotel = hotelData[hotelId];
+            const city = hotelId.includes('palermo') ? 'palermo' : hotelId.includes('trapani') ? 'trapani' : 'catania';
+            const detailsContainer = document.getElementById(city + '-details');
+            
+            // Remove active class from all buttons in this city
+            const citySection = detailsContainer.parentElement;
+            citySection.querySelectorAll('.hotel-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            // Generate hotel details HTML
+            const detailsHTML = `
+                <div class="hotel-name">
+                    ${hotel.name}
+                    <span class="hotel-price">${hotel.price}</span>
+                </div>
+                
+                <div class="hotel-info">
+                    <div class="info-item">
+                        <span class="info-icon">⭐</span>
+                        <span>${hotel.rating}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">📍</span>
+                        <span>${hotel.distance}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">🏠</span>
+                        <span>${hotel.type}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">👥</span>
+                        <span>${hotel.guests}</span>
+                    </div>
+                </div>
+                
+                <div class="hotel-info">
+                    <div style="grid-column: 1/-1;">
+                        <strong>🛏️ Sistemazione:</strong><br>
+                        ${hotel.rooms}
+                    </div>
+                </div>
+                
+                <div class="cancellation-info">
+                    <div class="cancellation-title">💳 Condizioni di prenotazione</div>
+                    <div><strong>Cancellazione:</strong> ${hotel.cancellation}</div>
+                    <div><strong>Pagamento:</strong> ${hotel.payment}</div>
+                </div>
+                
+                <div class="features-list">
+                    <div class="features-title">🧡 Gli ospiti vanno pazzi per...</div>
+                    ${hotel.features.map(feature => `<div class="feature-item">${feature}</div>`).join('')}
+                </div>
+            `;
+            
+            detailsContainer.innerHTML = detailsHTML;
+            detailsContainer.classList.add('show');
+            
+            // Smooth scroll to details
+            detailsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Car rental data
+        const carData = {
+            seat: {
+                name: "Seat Leon",
+                category: "Berlina Compatta",
+                image: "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=400&h=250&fit=crop&crop=center",
+                specs: [
+                    { icon: "👥", label: "Posti", value: "5 persone" },
+                    { icon: "🧳", label: "Bagagli", value: "3-4 valigie" },
+                    { icon: "⛽", label: "Carburante", value: "Benzina/Diesel" },
+                    { icon: "🔧", label: "Cambio", value: "Manuale/Automatico" },
+                    { icon: "❄️", label: "Clima", value: "Aria condizionata" },
+                    { icon: "📍", label: "Consumi", value: "5.5-6.5L/100km" }
+                ],
+                features: [
+                    "Sistema multimediale touchscreen",
+                    "Bluetooth e USB",
+                    "Controllo velocità di crociera",
+                    "Sensori di parcheggio",
+                    "Cerchi in lega",
+                    "Fari LED",
+                    "Sistema Start&Stop",
+                    "Airbag multipli"
+                ],
+                idealFor: "Perfetta per chi cerca comfort e stile con consumi contenuti. Ideale per coppie o piccole famiglie che vogliono viaggiare con eleganza sulle strade siciliane."
+            },
+            jeep: {
+                name: "Jeep Renegade",
+                category: "SUV Compatto",
+                image: "https://www.jeep-official.it/content/dam/jeep/crossmarket/renegade-my-25/phev/06-defining-your-style/north-star/figurines/JEEP-NORTH-STAR-PHEV-MY25-GRAPHITE-GREY-BR-565x330.png",
+                specs: [
+                    { icon: "👥", label: "Posti", value: "5 persone" },
+                    { icon: "🧳", label: "Bagagli", value: "1 valigia grande - 1 piccola" },
+                    { icon: "⛽", label: "Carburante", value: "Benzina" },
+                    { icon: "🔧", label: "Cambio", value: "Manuale" },
+                    { icon: "💰", label: "Economia", value: "148,88 €" },
+                    { icon: "📍", label: "Consumi", value: "Chilometraggio illimitato" }
+                ],
+                features: [
+                    "Sistema Uconnect touchscreen",
+                    "Bluetooth e Android Auto/Apple CarPlay",
+                    "Telecamera posteriore",
+                    "Sensori di parcheggio ant/post",
+                    "Barre portatutto",
+                    "Assetto rialzato",
+                    "Protezioni sottoscocca",
+                    "Controlli al volante"
+                ],
+                idealFor: "L'auto perfetta per l'avventura siciliana! Ideale per chi vuole esplorare anche strade sterrate e sentieri verso l'Etna, con spazio extra per bagagli e attrezzature."
+            },
+            fiat: {
+                name: "Fiat Tipo",
+                category: "Berlina Familiare",
+                image: "https://cdnwp.dealerk.com/eed49ed7/uploads/sites/142/2018/02/fiat-tipo-5-porte-1024x576.jpg",
+                specs: [
+                    { icon: "👥", label: "Posti", value: "5 persone" },
+                    { icon: "🧳", label: "Bagagli", value: "1 valigia grande - 1 piccola" },
+                    { icon: "⛽", label: "Carburante", value: "Benzina" },
+                    { icon: "🔧", label: "Cambio", value: "Manuale" },
+                    { icon: "💰", label: "Economia", value: "156,32 €" },
+                    { icon: "📍", label: "Consumi", value: "Chilometraggio illimitato" }
+                ],
+                features: [
+                    "Radio con Bluetooth",
+                    "Connessioni USB e AUX",
+                    "Aria condizionata manuale",
+                    "Alzacristalli elettrici",
+                    "Chiusura centralizzata",
+                    "Airbag frontali",
+                    "ABS e controllo stabilità",
+                    "Ampio bagagliaio"
+                ],
+                idealFor: "La scelta più economica e pratica per il vostro tour siciliano. Perfetta per famiglie attente al budget che cercano spazio e affidabilità senza rinunciare al comfort."
+            }
+        };
+
+        function showHotelDetails(hotelId) {
+            const hotel = hotelData[hotelId];
+            const city = hotelId.includes('palermo') ? 'palermo' : hotelId.includes('trapani') ? 'trapani' : 'catania';
+            const detailsContainer = document.getElementById(city + '-details');
+            
+            // Remove active class from all buttons in this city
+            const citySection = detailsContainer.parentElement;
+            citySection.querySelectorAll('.hotel-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            // Generate hotel details HTML
+            const detailsHTML = `
+                <div class="hotel-name">
+                    ${hotel.name}
+                    <span class="hotel-price">${hotel.price}</span>
+                </div>
+                
+                <div class="hotel-info">
+                    <div class="info-item">
+                        <span class="info-icon">⭐</span>
+                        <span>${hotel.rating}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">📍</span>
+                        <span>${hotel.distance}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">🏠</span>
+                        <span>${hotel.type}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">👥</span>
+                        <span>${hotel.guests}</span>
+                    </div>
+                </div>
+                
+                <div class="hotel-info">
+                    <div style="grid-column: 1/-1;">
+                        <strong>🛏️ Sistemazione:</strong><br>
+                        ${hotel.rooms}
+                    </div>
+                </div>
+                
+                <div class="cancellation-info">
+                    <div class="cancellation-title">💳 Condizioni di prenotazione</div>
+                    <div><strong>Cancellazione:</strong> ${hotel.cancellation}</div>
+                    <div><strong>Pagamento:</strong> ${hotel.payment}</div>
+                </div>
+                
+                <div class="features-list">
+                    <div class="features-title">🧡 Gli ospiti vanno pazzi per...</div>
+                    ${hotel.features.map(feature => `<div class="feature-item">${feature}</div>`).join('')}
+                </div>
+            `;
+            
+            detailsContainer.innerHTML = detailsHTML;
+            detailsContainer.classList.add('show');
+            
+            // Smooth scroll to details
+            detailsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function showCarDetails(carId) {
+            const car = carData[carId];
+            const detailsContainer = document.getElementById('car-details');
+            
+            // Remove active class from all car buttons
+            document.querySelectorAll('.car-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            // Generate car details HTML
+            const detailsHTML = `
+                <div class="car-header">
+                    <img src="${car.image}" alt="${car.name}" class="car-image" />
+                    <div class="car-info-main">
+                        <div class="car-name">${car.name}</div>
+                        <div class="car-category">${car.category}</div>
+                    </div>
+                </div>
+                
+                <div class="car-specs">
+                    ${car.specs.map(spec => `
+                        <div class="spec-item">
+                            <div class="spec-icon">${spec.icon}</div>
+                            <div class="spec-text">
+                                <div class="spec-label">${spec.label}</div>
+                                <div class="spec-value">${spec.value}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="car-features">
+                    <div class="car-features-title">Caratteristiche incluse</div>
+                    <div class="features-grid">
+                        ${car.features.map(feature => `<div class="feature-badge">${feature}</div>`).join('')}
+                    </div>
+                </div>
+                
+                <div class="ideal-for">
+                    <div class="ideal-title">Ideale per</div>
+                    <div>${car.idealFor}</div>
+                </div>
+            `;
+            
+            detailsContainer.innerHTML = detailsHTML;
+            detailsContainer.classList.add('show');
+            
+            // Smooth scroll to details
+            detailsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    </script>
+</body>
+</html>
